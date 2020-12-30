@@ -1,6 +1,12 @@
 '''
-This library consume the classifier model.
+This library consume the classifier model from the static folder.
 We load the model from file, then we make predictions.
+This is just a demo to test a tensorflow model.
+
+For production environment, we must deploy the model to cloud exposing an api url and
+have another script that consume the model using that url.
+
+
 
 references:
 https://github.com/GoogleCloudPlatform/training-data-analyst/blob/master/courses/machine_learning/deepdive/06_structured/3_keras_dnn.ipynb
@@ -11,10 +17,8 @@ from os import path
 import tensorflow as tf
 from tensorflow.keras.models import load_model
 
-#model_h5_path = path.join( settings.STATICFILES_DIRS, 'predict', 'baby.h5' )
-model_h5_path = 'C:/Users/artur/git/baby_weight_tf/baby_weight/static/predict/baby.h5'
-print( 'model_h5_path: {}'.format( model_h5_path ) )
-h5_model = load_model( model_h5_path )
+model_h5_path = path.join(settings.STATICFILES_DIRS[0], 'predict', 'baby.h5')
+h5_model      = load_model( model_h5_path )
 
 def get_weight( j_input ):
     try:
