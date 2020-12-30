@@ -19,6 +19,15 @@ baby weight using deep learning tensorflow model on gcp cloud
 
 gcloud app deploy app.yaml
 
+### google developer
+Next step is run this on cloud. For that we will install using pip the next librairies.
+
+oauth2client==4.1.3
+google-api-client
+google-api-python-client
+google-auth-httplib2
+google-auth-oauthlib
+
 
 
 

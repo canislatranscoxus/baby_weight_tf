@@ -1,30 +1,35 @@
 '''
+This library consume the classifier model.
+We load the model from file, then we make predictions.
 
 references:
 https://github.com/GoogleCloudPlatform/training-data-analyst/blob/master/courses/machine_learning/deepdive/06_structured/3_keras_dnn.ipynb
 
 '''
-from oauth2client.client import GoogleCredentials
-from googleapiclient import discovery
+from baby_weight import settings
+from os import path
+import tensorflow as tf
+from tensorflow.keras.models import load_model
 
-credentials  = GoogleCredentials.get_application_default()
-api          = discovery.build('ml', 'v1', credentials=credentials)
-project      = PROJECT
-model_name   = 'babyweight'
-version_name = 'dnn'
+#model_h5_path = path.join( settings.STATICFILES_DIRS, 'predict', 'baby.h5' )
+model_h5_path = 'C:/Users/artur/git/baby_weight_tf/baby_weight/static/predict/baby.h5'
+print( 'model_h5_path: {}'.format( model_h5_path ) )
+h5_model = load_model( model_h5_path )
 
-def get_weight( input_data ):
+def get_weight( j_input ):
+    try:
+        tf_dic        = {name: tf.convert_to_tensor([value]) for name, value in j_input.items()}
+        predictions   = h5_model.predict( tf_dic )
+        weight_pounds = predictions[0][0]
+        weight_kilos  = weight_pounds * 0.45359237
 
-    parent      = 'projects/%s/models/%s/versions/%s' % (project, model_name, version_name)
-    prediction  = api.projects().predict(body=input_data, name=parent).execute()
-    print(prediction)
-    print(prediction['predictions'][0]['babyweight'][0])
+        result        = {
+                            'weight_pounds' : predictions[0][0],
+                            'weight_kilos'  : weight_pounds * 0.45359237
+                        }
 
-    weight_pounds = prediction['predictions'][0]['babyweight'][0]
-    weight_kilos  = weight_pounds / 2.2046
+        return result
 
-    result = {
-        'weight_pounds' : weight_kilos,
-        'weight_kilos'  : weight_pounds
-    }
-    return result
+    except Exception as e:
+        print( 'predict.api_baby.get_weight(), error:  {}'.format( e ) )
+        raise
