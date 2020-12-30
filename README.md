@@ -17,7 +17,7 @@ baby weight using deep learning tensorflow model on gcp cloud
 
 ### deploy from console
 
-gcloud app deploy app.yaml
+`gcloud app deploy app.yaml`
 
 ### google developer
 Next step is run this on cloud. For that we will install using pip the next librairies.
